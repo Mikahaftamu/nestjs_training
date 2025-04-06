@@ -1,33 +1,19 @@
-// import { NestFactory } from '@nestjs/core';
-// import { AppModule } from './app.module';
-// import { ValidationPipe } from '@nestjs/common';
-
-// async function bootstrap() {
-//   const app = await NestFactory.create(AppModule);
-//   await app.listen(process.env.PORT ?? 3000);
-
-//   app.setGlobalPrefix('api');
-//   app.enableCors();
-
-//   app.useGlobalPipes(
-//     new ValidationPipe({
-//       whitelist: true,            // Remove properties not in DTO
-//       forbidNonWhitelisted: true, // Throw error on extra properties
-//       transform: true,            // Auto-convert payloads
-//     }),
-//   );
-
- 
-  
-// }
-// bootstrap();
-
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const config = new DocumentBuilder()
+    .setTitle('users apis')
+    .setDescription('my first swagger ui documention for users apis')
+    .setVersion('1.0')
+    // .addTag('users')
+    .build();
+  const documentFactory = () =>  SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, documentFactory);
 
   // Set global prefix to make the routes start with /api
   app.setGlobalPrefix('api');
